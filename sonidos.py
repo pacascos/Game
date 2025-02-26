@@ -47,8 +47,7 @@ class Sonidos:
             "propulsor_lateral": (0.05, self._generar_ruido, {"volumen": 0.2}),
             "explosion": (1.0, self._generar_ruido, {"volumen": 0.7, "decay": True}),
             "exito": (1.0, self._generar_melodia, {"frecuencia": 440}),
-            "inicio": (0.5, self._generar_barrido, {"frecuencia": 330}),
-            "precision": (0.2, self._generar_tono, {"frecuencia": 660})
+            "inicio": (0.5, self._generar_barrido, {"frecuencia": 330})
         }
         
         for nombre, (duracion, generador, params) in sonidos.items():
@@ -163,9 +162,6 @@ class Sonidos:
     
     def reproducir_inicio(self):
         self.reproducir_sonido("inicio")
-    
-    def reproducir_precision(self):
-        self.reproducir_sonido("precision")
     
     def detener_todos(self):
         """Detiene todos los sonidos activos"""

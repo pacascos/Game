@@ -1,2 +1,21 @@
 gameVE/
 .venv/
+
+# Archivos de sonido generados
+sounds/
+
+# Archivos de puntuación
+high_scores.json
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.py[cod]
+*$py.class
+
+# Archivos antiguos/backup
+sonidos_simple.py
+test_audio.py

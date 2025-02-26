@@ -45,7 +45,6 @@ COLOR_HUMO_EXPLOSION = [(150, 150, 150), (100, 100, 100), (80, 80, 80)]  # Color
 COLOR_DESTELLO = [(255, 255, 200), (255, 255, 255)]  # Para el destello inicial
 
 # Nuevas constantes para mejorar la jugabilidad
-MODO_PRECISION = 0.5  # Factor de reducción del empuje en modo precisión
 INDICADOR_ATERRIZAJE = True  # Mostrar indicador de zona segura
 GRAVEDAD = 0.03  # Gravedad lunar constante para todos los niveles
 
@@ -426,7 +425,6 @@ class Nave:
         self.propulsor_activo = False
         self.propulsor_izquierda = False
         self.propulsor_derecha = False
-        self.modo_precision = False
         
         self.viento = 0
         self.direccion_viento = 1
@@ -477,9 +475,8 @@ class Nave:
             
             # Controles de la nave
             if self.propulsor_activo and self.fuel > 0:
-                factor_empuje = MODO_PRECISION if self.modo_precision else 1.0
-                self.velocidad_y -= EMPUJE * factor_empuje
-                self.fuel = max(0, self.fuel - 1 * factor_empuje)
+                self.velocidad_y -= EMPUJE
+                self.fuel = max(0, self.fuel - 1)
                 
                 # Crear partículas del propulsor
                 for _ in range(2):
@@ -498,15 +495,13 @@ class Nave:
             
             # Propulsores laterales
             if self.propulsor_izquierda and self.fuel > 0:
-                factor_empuje = MODO_PRECISION if self.modo_precision else 1.0
-                self.velocidad_x -= EMPUJE_LATERAL * factor_empuje
-                self.fuel = max(0, self.fuel - 0.5 * factor_empuje)
+                self.velocidad_x -= EMPUJE_LATERAL
+                self.fuel = max(0, self.fuel - 0.5)
                 if self.sonidos:
                     self.sonidos.reproducir_propulsor_lateral()
             elif self.propulsor_derecha and self.fuel > 0:
-                factor_empuje = MODO_PRECISION if self.modo_precision else 1.0
-                self.velocidad_x += EMPUJE_LATERAL * factor_empuje
-                self.fuel = max(0, self.fuel - 0.5 * factor_empuje)
+                self.velocidad_x += EMPUJE_LATERAL
+                self.fuel = max(0, self.fuel - 0.5)
                 if self.sonidos:
                     self.sonidos.reproducir_propulsor_lateral()
             
@@ -769,11 +764,6 @@ def dibujar_hud(nave):
         
         texto_viento = fuente.render(f"Viento: {abs(nave.viento):.3f} {texto_intensidad}{direccion}", True, color_viento)
     
-    # Modo precisión
-    if nave.modo_precision:
-        texto_precision = fuente.render("MODO PRECISIÓN", True, COLOR_VERDE)
-        pantalla.blit(texto_precision, (ANCHO - 200, 10))
-    
     # Nivel actual
     texto_nivel = fuente.render(f"Nivel: {nave.nivel}", True, COLOR_AMARILLO)
     pantalla.blit(texto_nivel, (ANCHO - 150, 50))
@@ -965,9 +955,6 @@ def main():
                         nave.propulsor_izquierda = True
                     elif evento.key == pygame.K_RIGHT:
                         nave.propulsor_derecha = True
-                    elif evento.key == pygame.K_LSHIFT or evento.key == pygame.K_RSHIFT:
-                        nave.modo_precision = True
-                        sonidos.reproducir_precision()
                     elif evento.key == pygame.K_ESCAPE:
                         sonidos.detener_todos()
                         pygame.quit()
@@ -980,8 +967,6 @@ def main():
                         nave.propulsor_izquierda = False
                     elif evento.key == pygame.K_RIGHT:
                         nave.propulsor_derecha = False
-                    elif evento.key == pygame.K_LSHIFT or evento.key == pygame.K_RSHIFT:
-                        nave.modo_precision = False
 
             # Actualizar sonidos basado en el estado de los propulsores
             if nave.propulsor_activo and nave.fuel > 0:
