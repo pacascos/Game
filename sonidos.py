@@ -36,7 +36,6 @@ class Sonidos:
             self.sonido_explosion = pygame.mixer.Sound("sounds/explosion.wav")
             self.sonido_inicio = pygame.mixer.Sound("sounds/inicio.wav")
             self.sonido_precision = pygame.mixer.Sound("sounds/precision.wav")
-            print("Sonidos cargados correctamente")
         except Exception as e:
             print(f"Error cargando sonidos: {e}")
             self.sonido_activo = False
@@ -116,13 +115,11 @@ class Sonidos:
     def _reproducir_mac(self, archivo):
         """Reproduce un sonido en macOS"""
         try:
-            print(f"Intentando reproducir: {archivo}")
             # Limpiar procesos terminados
             self.procesos_activos = [p for p in self.procesos_activos if p.poll() is None]
             
             # Verificar que el archivo existe
             if not os.path.exists(archivo):
-                print(f"Error: El archivo {archivo} no existe")
                 return False
             
             proceso = subprocess.Popen(['afplay', archivo],
@@ -130,8 +127,7 @@ class Sonidos:
                                      stderr=subprocess.DEVNULL)
             self.procesos_activos.append(proceso)
             return True
-        except Exception as e:
-            print(f"Error reproduciendo sonido en macOS: {e}")
+        except:
             return False
     
     def reproducir_sonido(self, nombre, intervalo=0):
@@ -158,7 +154,6 @@ class Sonidos:
     
     def reproducir_exito(self):
         """Reproduce el sonido de éxito"""
-        print("Intentando reproducir sonido de éxito")
         if not self.sonido_activo:
             return
         # Reproducir sin intervalo y esperar un poco
